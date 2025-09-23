@@ -23,6 +23,10 @@ class transaction:
         self.amount = amount
         self.transaction_type = transaction_type
 
+    def __str__(self):
+        return f"{self.date} - {self.transaction_type} - {self.amount}"
+
+
 # function for generating random and unique account_id
 def generate_account_id():
     return random.randint (10000,99999)
@@ -32,6 +36,7 @@ class bankAccount:
         self.account_id = generate_account_id()
         self.account_holder = account_holder
         self.balance = 0
+        self.transactions = []
         
     def deposit(self, amount):
         if amount >0:
