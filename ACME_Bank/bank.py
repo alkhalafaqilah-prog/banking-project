@@ -57,7 +57,10 @@ class bankAccount:
     def display_details(self):
         print(f"Account ID: {self.account_id}, Account Holder: {self.account_holder}, Balance: {self.balance}")
     
-    
+    def print_transaction_history(self):
+        print("Transaction History: ")
+        for transaction in self.transactions:
+            print(transaction)
 
 
 class savingsAccount(bankAccount):
