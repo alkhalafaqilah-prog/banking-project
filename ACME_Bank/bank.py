@@ -26,7 +26,7 @@ class BankAccount:
         self.account_holder = account_holder
         self.balance = 0
         
-    def deposit(self,amount):
+    def deposit(self, amount):
         if amount >0:
             self.balance += amount
             print(f"Deposited ${amount}. \n New balance: ${self.balance}")
@@ -39,3 +39,6 @@ class BankAccount:
             print(f"Withdrew ${amount}. \n New balance: ${self.balance}")
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
+
+    def display_details(self):
+        print(f"Account ID: {self.account_id}. \n Account Holder: {self.account_holder}.\n Balance: {self.balance}")
