@@ -1,4 +1,5 @@
 import random
+import datetime
 
 # Main page for ACME bank system
 class mainBankPage:
@@ -16,11 +17,17 @@ class mainBankPage:
         print()
     welcomeMessage()
 
+class transaction:
+    def __init__(self,amount, transaction_type):
+        self.date = datetime.now()
+        self.amount = amount
+        self.transaction_type = transaction_type
+
 # function for generating random and unique account_id
 def generate_account_id():
     return random.randint (10000,99999)
 
-class BankAccount:
+class bankAccount:
     def __init__(self, account_holder):
         self.account_id = generate_account_id()
         self.account_holder = account_holder
@@ -44,7 +51,7 @@ class BankAccount:
         print(f"Account ID: {self.account_id}, Account Holder: {self.account_holder}, Balance: {self.balance}")
 
 
-class SavingsAccount(BankAccount):
+class savingsAccount(bankAccount):
     def __init__(self, account_holder, minimum_balance):
         super().__init__(account_holder)
         self.minimum_balance  = minimum_balance
@@ -57,7 +64,7 @@ class SavingsAccount(BankAccount):
         
 
 
-class CheckingAccount():
+class checkingAccount(bankAccount):
     def __init__(self, account_holder):
         super().__init__(account_holder)
         self.checkbook_issued = False
@@ -70,14 +77,28 @@ class CheckingAccount():
             print("Checkbook already issued.")
 
 
-#bank_account1 = BankAccount("Michael")
+# frodo_savings = savingsAccount("Frodo Baggins", 500)
+# frodo_savings.deposit(1000)
+# frodo_savings.withdraw(600)
+# frodo_savings.display_details()
+
+# print("-" * 50)
+
+# voldi_checking = checkingAccount("Lord Voldemort")
+# voldi_checking.deposit(2000)
+# voldi_checking.issue_checkbook()
+# voldi_checking.withdraw(1500)
+# voldi_checking.display_details()
+
+
+#bank_account1 = bankAccount("Michael")
 #bank_account1.deposit(100)
 #bank_account1.deposit(100)
 #bank_account1.withdraw(50)
 
 #print("-" * 50)
 
-#bank_account2 = BankAccount("Kalen")
+#bank_account2 = bankAccount("Kalen")
 #bank_account2.deposit(500)
 #bank_account2.deposit(-30)
 #bank_account2.withdraw(780)
