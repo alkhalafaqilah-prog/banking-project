@@ -25,4 +25,11 @@ class BankAccount:
         self.account_id = generate_account_id()
         self.account_holder = account_holder
         self.balance = 0
+        
+    def deposit(self,amount):
+        if amount >0:
+            self.balance += amount
+            print("Deposited ${amount}. \n New balance: ${self.balance}")
+        else:
+            print("Deposit amount must be positive")
 
