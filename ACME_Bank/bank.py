@@ -42,6 +42,7 @@ class bankAccount:
         if amount >0:
             self.balance += amount
             print(f"Deposited ${amount}\nNew balance: ${self.balance}")
+            self.transactions.append(transaction(amount, "Deposit"))
         else:
             print("Deposit amount must be positive.")
     
@@ -49,11 +50,14 @@ class bankAccount:
         if 0 <= amount <= self.balance:
             self.balance -= amount
             print(f"Withdrew ${amount}\nNew balance: ${self.balance}")
+            self.transactions.append(transaction(amount, "Withdrawal"))
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
 
     def display_details(self):
         print(f"Account ID: {self.account_id}, Account Holder: {self.account_holder}, Balance: {self.balance}")
+    
+    
 
 
 class savingsAccount(bankAccount):
