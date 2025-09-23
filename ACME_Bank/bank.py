@@ -20,3 +20,9 @@ class mainBankPage:
 def generate_account_id():
     return random.randint (10000,99999)
 
+class BankAccount:
+    def __init__(self, account_holder):
+        self.account_id = generate_account_id()
+        self.account_holder = account_holder
+        self.balance = 0
+
