@@ -48,6 +48,12 @@ class SavingsAccount(BankAccount):
     def __init__(self, account_holder, minimum_balance):
         super.__init__(account_holder)
         self.minimum_balance  = minimum_balance
+    
+    def withdraw(self,amount):
+        if self.balance - amount < self.minimum_balance:
+            print ("Cannot withdraw, minimum balance requirement not met.")
+        else:
+            super().withdraw(amount)
         
     
 #bank_account1 = BankAccount("Michael")
