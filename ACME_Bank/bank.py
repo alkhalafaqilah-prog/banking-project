@@ -46,7 +46,7 @@ class BankAccount:
 
 class SavingsAccount(BankAccount):
     def __init__(self, account_holder, minimum_balance):
-        super.__init__(account_holder)
+        super().__init__(account_holder)
         self.minimum_balance  = minimum_balance
     
     def withdraw(self,amount):
@@ -55,7 +55,13 @@ class SavingsAccount(BankAccount):
         else:
             super().withdraw(amount)
         
-    
+
+
+class CheckingAccount():
+    def __init__(self, account_holder):
+        super().__init__(account_holder)
+        self.checkbook_issued = False
+        
 #bank_account1 = BankAccount("Michael")
 #bank_account1.deposit(100)
 #bank_account1.deposit(100)
