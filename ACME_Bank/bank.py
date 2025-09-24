@@ -12,10 +12,10 @@ class MainBankPage:
             print("                Welcome to ACME Bank               ")
             print("-" * 50)
             print("  Please choose one of the following options:")
-            print("    1.Login to existing account.")
-            print("    2.Create new checking account.")
-            print("    3.Create new saving account.")
-            print("    4.Exit.")
+            print("    1. Login to existing account.")
+            print("    2. Create new checking account.")
+            print("    3. Create new saving account.")
+            print("    4. Exit.")
             print()
             
             choice = input("Enter your choice: ")
@@ -27,6 +27,39 @@ class MainBankPage:
             elif choice == "3":
                 pass
             elif choice == "4":
+                print("Thank you for banking with us!")
+                break
+            else:
+                print("Invalid input. Please try again.")
+    
+    def accountOperations():
+        while True:
+            print()
+            print("-" * 50)
+            print("                Account Operations               ")
+            print("-" * 50)
+            print("  Please choose one of the following options:")
+            print("    1. Deposit.")
+            print("    2. Withdraw.")
+            print("    3. Transfer.")
+            print("    4. Check Balance.")
+            print("    5. View transaction history.")
+            print("    6. Exit.")
+            print()
+            
+            choice = input("Enter your choice: ")
+            
+            if choice == "1":
+                pass
+            elif choice == "2":
+                pass
+            elif choice == "3":
+                pass
+            elif choice == "4":
+                pass
+            elif choice == "5":
+                pass
+            elif choice == "6":
                 print("Thank you for banking with us!")
                 break
             else:
