@@ -166,7 +166,14 @@ class MainBankPage (BankAccount):
                 self.accountOperations(account_id)
                 
             elif choice == "3":
-                pass
+                print("\n    <<<    New Customer Registration    >>>")
+                first_name = input("Enter your first name: ")
+                last_name = input("Enter your last name: ")
+                password = input("Create a password: ")
+                account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
+                print(f"\nSuccessfully created a new savings account! Your Account ID is: {account_id}")
+                self.accountOperations(account_id)
+                
             elif choice == "4":
                 print("Thank you for banking with us!")
                 break
