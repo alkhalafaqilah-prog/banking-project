@@ -115,6 +115,21 @@ class BankAccount:
             if new_account_id not in self.accounts:
                 return new_account_id
     
+    def add_new_customer(self, frst_name, last_name, password, checking_balance =0.0, savings_balance =0.0):
+        account_id = self.generate_account_id()
+        self.accounts[account_id] = {
+            'frst_name': frst_name,
+            'last_name': last_name,
+            'password' : password,
+            'checking_balance' : checking_balance,
+            'savings_balance': savings_balance,
+            'overdraft_count': 0,
+            'is_active': True
+        }
+        self.upload_accounts()
+        return account_id
+    
+    
     def deposit(self, amount):
         if amount >0:
             self.balance += amount
