@@ -1,8 +1,9 @@
+import csv
 import random
 import datetime
 
 # Main page for ACME bank system
-class mainBankPage:
+class MainBankPage:
     # Function displaying main page welcome message
     def welcomeMessage():
         print()
@@ -17,32 +18,48 @@ class mainBankPage:
         print()
     welcomeMessage()
 
-class transaction:
+# Source Michael - Coding Instructor YT
+class Transaction:
     def __init__(self,amount, transaction_type):
-        self.date = datetime.now()
+        self.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.amount = amount
         self.transaction_type = transaction_type
 
     def __str__(self):
-        return f"{self.date} - {self.transaction_type} - {self.amount}"
+        return f"{self.date} - {self.transaction_type} - ${self.amount}"
 
 
 # function for generating random and unique account_id
 def generate_account_id():
     return random.randint (10000,99999)
 
-class bankAccount:
-    def __init__(self, account_holder):
-        self.account_id = generate_account_id()
-        self.account_holder = account_holder
-        self.balance = 0
+class BankAccount:
+    def __init__(self, bankData="bank.csv"):
+        self.bankData= bankData
+        self.accounts = self.get_accounts()
         self.transactions = []
         
+    def get_accounts(self):
+        accounts = {}
+        with open(self.bankData, 'r', newline='') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                accounts[row['account_id']] = {
+                    'frst_name': row['frst_name'],
+                    'last_name': row['last_name'],
+                    'password': row['password'],
+                    'balance_checking': float(row['balance_checking']),
+                    'balance_savings': float(row['balance_savings']),
+                    'overdraft_count': int(row.get('overdraft_count', 0)),
+                    'is_active': row.get('is_active', 'True').lower() == 'true'
+                    }
+        return accounts
+    
     def deposit(self, amount):
         if amount >0:
             self.balance += amount
             print(f"Deposited ${amount}\nNew balance: ${self.balance}")
-            self.transactions.append(transaction(amount, "Deposit"))
+            self.transactions.append(Transaction(amount, "Deposit"))
         else:
             print("Deposit amount must be positive.")
     
@@ -50,7 +67,7 @@ class bankAccount:
         if 0 <= amount <= self.balance:
             self.balance -= amount
             print(f"Withdrew ${amount}\nNew balance: ${self.balance}")
-            self.transactions.append(transaction(amount, "Withdrawal"))
+            self.transactions.append(Transaction(amount, "Withdrawal"))
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
 
@@ -63,7 +80,7 @@ class bankAccount:
             print(transaction)
 
 
-class savingsAccount(bankAccount):
+class SavingsAccount(BankAccount):
     def __init__(self, account_holder, minimum_balance):
         super().__init__(account_holder)
         self.minimum_balance  = minimum_balance
@@ -76,7 +93,7 @@ class savingsAccount(bankAccount):
         
 
 
-class checkingAccount(bankAccount):
+class CheckingAccount(BankAccount):
     def __init__(self, account_holder):
         super().__init__(account_holder)
         self.checkbook_issued = False
@@ -88,35 +105,4 @@ class checkingAccount(bankAccount):
         else:
             print("Checkbook already issued.")
 
-
-# frodo_savings = savingsAccount("Frodo Baggins", 500)
-# frodo_savings.deposit(1000)
-# frodo_savings.withdraw(600)
-# frodo_savings.display_details()
-
-# print("-" * 50)
-
-# voldi_checking = checkingAccount("Lord Voldemort")
-# voldi_checking.deposit(2000)
-# voldi_checking.issue_checkbook()
-# voldi_checking.withdraw(1500)
-# voldi_checking.display_details()
-
-
-#bank_account1 = bankAccount("Michael")
-#bank_account1.deposit(100)
-#bank_account1.deposit(100)
-#bank_account1.withdraw(50)
-
-#print("-" * 50)
-
-#bank_account2 = bankAccount("Kalen")
-#bank_account2.deposit(500)
-#bank_account2.deposit(-30)
-#bank_account2.withdraw(780)
-
-#print("-" * 50)
-
-#bank_account1.display_details()
-#bank_account2.display_details()
 
