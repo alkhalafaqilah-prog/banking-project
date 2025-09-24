@@ -77,10 +77,6 @@ class Transaction:
         return f"{self.date} - {self.transaction_type} - ${self.amount}"
 
 
-# function for generating random and unique account_id
-def generate_account_id():
-    return random.randint (10000,99999)
-
 class BankAccount:
     def __init__(self, bankData="bank.csv"):
         self.bankData= bankData
@@ -112,6 +108,13 @@ class BankAccount:
                 row = {'account_id': account_id, **data}
                 writer.writerow(row)
             
+    # function for generating random and unique account_id
+    def generate_account_id(self):
+        while True:
+            new_account_id  = str(random.randint (10000,99999))
+            if new_account_id not in self.accounts:
+                return new_account_id
+    
     def deposit(self, amount):
         if amount >0:
             self.balance += amount
