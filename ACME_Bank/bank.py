@@ -86,7 +86,7 @@ class BankAccount:
     def get_accounts(self):
         accounts = {}
         with open(self.bankData, 'r', newline='') as file:
-            reader = csv.reader(file)
+            reader = csv.DictReader(file)
             for row in reader:
                 accounts[row['account_id']] = {
                     'frst_name': row['frst_name'],
@@ -102,7 +102,7 @@ class BankAccount:
     def upload_accounts(self):
         fieldNames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'overdraft_count', 'is_active']
         with open(self.bankData, 'w', newline='') as file:
-            writer = csv.writer(file, fieldNames = fieldNames )
+            writer = csv.DictWriter(file, fieldNames = fieldNames )
             writer.writeheader()
             for account_id, data in self.accounts.items():
                 row = {'account_id': account_id, **data}
@@ -130,6 +130,9 @@ class BankAccount:
         return account_id
     
     def login(self, account_id, password):
+        account_id = input("Enter your account ID: ")
+        password = input("Enter your account password: ")
+        
         if account_id not in self.accounts:
             print("Entered account does not exist!")
         if not self.accounts[account_id]['is_active']:
@@ -139,24 +142,26 @@ class BankAccount:
         print("Login Confirmed!")
         return self.accounts[account_id]
     
-    def deposit(self, amount):
+    def deposit(self, account_id, account_type, amount):
         if amount >0:
-            self.balance += amount
-            print(f"Deposited ${amount}\nNew balance: ${self.balance}")
+            self.accounts[account_id][f'balance_{account_type}'] += amount
+            print(f"Deposited ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
             self.transactions.append(Transaction(amount, "Deposit"))
         else:
             print("Deposit amount must be positive.")
     
-    def withdraw(self,amount):
-        if 0 <= amount <= self.balance:
-            self.balance -= amount
-            print(f"Withdrew ${amount}\nNew balance: ${self.balance}")
+    def withdraw(self, account_id, account_type, amount):
+        if 0 <= amount <= self.accounts[account_id][f'balance_{account_type}']:
+            self.accounts[account_id][f'balance_{account_type}'] -= amount
+            print(f"Withdrew ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
             self.transactions.append(Transaction(amount, "Withdrawal"))
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
 
-    def display_details(self):
-        print(f"Account ID: {self.account_id}, Account Holder: {self.account_holder}, Balance: {self.balance}")
+    def display_details(self, account_id):
+        account_info = self.accounts[account_id]
+        full_name = f"{account_info['frst_name']} {account_info['last_name']}"
+        print(f"Account ID: {account_id}, Account Holder: {full_name}, \nBalance_checking: {account_info['balance_checking']}. , Balance_savings: {account_info['balance_savings']}")
     
     def print_transaction_history(self):
         print("Transaction History: ")
@@ -188,5 +193,10 @@ class CheckingAccount(BankAccount):
             print ("Checkbook issued")
         else:
             print("Checkbook already issued.")
+            
 
+if __name__ == "__main__":
+    bank = BankAccount()
+    MainBankPage.welcomeMessage()
+    MainBankPage.accountOperations()
 
