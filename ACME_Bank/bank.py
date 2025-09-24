@@ -103,6 +103,15 @@ class BankAccount:
                     }
         return accounts
     
+    def upload_accounts(self):
+        fieldNames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'overdraft_count', 'is_active']
+        with open(self.bankData, 'w', newline='') as file:
+            writer = csv.writer(file, fieldNames = fieldNames )
+            writer.writeheader()
+            for account_id, data in self.accounts.items():
+                row = {'account_id': account_id, **data}
+                writer.writerow(row)
+            
     def deposit(self, amount):
         if amount >0:
             self.balance += amount
