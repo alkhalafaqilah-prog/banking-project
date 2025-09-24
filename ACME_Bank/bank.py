@@ -36,9 +36,9 @@ class BankAccount:
         return accounts
     
     def upload_accounts(self):
-        fieldNames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'overdraft_count', 'is_active']
+        fieldnames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'overdraft_count', 'is_active']
         with open(self.bankData, 'w', newline='') as file:
-            writer = csv.DictWriter(file, fieldNames = fieldNames )
+            writer = csv.DictWriter(file, fieldnames = fieldnames )
             writer.writeheader()
             for account_id, data in self.accounts.items():
                 row = {'account_id': account_id, **data}
@@ -57,8 +57,8 @@ class BankAccount:
             'frst_name': frst_name,
             'last_name': last_name,
             'password' : password,
-            'checking_balance' : checking_balance,
-            'savings_balance': savings_balance,
+            'balance_checking' : checking_balance,
+            'balance_savings': savings_balance,
             'overdraft_count': 0,
             'is_active': True
         }
@@ -155,8 +155,16 @@ class MainBankPage (BankAccount):
                 password = input("Enter your account password: ")
                 self.login(account_id,password)
                 self.accountOperations(account_id)
+                
             elif choice == "2":
-                pass
+                print("\n    <<<    New Customer Registration    >>>")
+                first_name = input("Enter your first name: ")
+                last_name = input("Enter your last name: ")
+                password = input("Create a password: ")
+                account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
+                print(f"\nSuccessfully created a new checking account! Your Account ID is: {account_id}")
+                self.accountOperations(account_id)
+                
             elif choice == "3":
                 pass
             elif choice == "4":
