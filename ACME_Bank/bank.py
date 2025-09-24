@@ -129,6 +129,15 @@ class BankAccount:
         self.upload_accounts()
         return account_id
     
+    def login(self, account_id, password):
+        if account_id not in self.accounts:
+            print("Entered account does not exist!")
+        if not self.accounts[account_id]['is_active']:
+            print("Your account is deactivated.")
+        if self.accounts[account_id]['password'] != password:
+            print("Incorrect password.")
+        print("Login Confirmed!")
+        return self.accounts[account_id]
     
     def deposit(self, amount):
         if amount >0:
