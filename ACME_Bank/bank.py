@@ -80,6 +80,7 @@ class BankAccount:
             self.accounts[account_id][f'balance_{account_type}'] += amount
             print(f"Deposited ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
             self.transactions.append(Transaction(amount, "Deposit"))
+            self.upload_accounts()
         else:
             print("Deposit amount must be positive.")
     
@@ -88,6 +89,7 @@ class BankAccount:
             self.accounts[account_id][f'balance_{account_type}'] -= amount
             print(f"Withdrew ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
             self.transactions.append(Transaction(amount, "Withdrawal"))
+            self.upload_accounts()
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
 
@@ -163,7 +165,6 @@ class MainBankPage (BankAccount):
                 password = input("Create a password: ")
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
                 print(f"\nSuccessfully created a new checking account! Your Account ID is: {account_id}")
-                self.accountOperations(account_id)
                 
             elif choice == "3":
                 print("\n    <<<    New Customer Registration    >>>")
@@ -172,7 +173,6 @@ class MainBankPage (BankAccount):
                 password = input("Create a password: ")
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
                 print(f"\nSuccessfully created a new savings account! Your Account ID is: {account_id}")
-                self.accountOperations(account_id)
                 
             elif choice == "4":
                 print("Thank you for banking with us!")
@@ -198,9 +198,15 @@ class MainBankPage (BankAccount):
             choice = input("Enter your choice: ")
             
             if choice == "1":
-                pass
+                account_type = input("Which account to deposit to?(checking/savings): ")
+                amount = float(input("Enter deposit amount: "))
+                self.deposit(account_id, account_type, amount)
+                
             elif choice == "2":
-                pass
+                account_type = input("Which account to withdraw from?(checking/savings): ")
+                amount = float(input("Enter withdraw amount: "))
+                self.deposit(account_id, account_type, amount)
+                
             elif choice == "3":
                 pass
             elif choice == "4":
