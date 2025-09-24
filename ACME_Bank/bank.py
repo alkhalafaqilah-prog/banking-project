@@ -3,16 +3,6 @@ import random
 import datetime
 
 # Source Michael - Coding Instructor YT & codeBricks
-class Transaction:
-    def __init__(self,amount, transaction_type):
-        self.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.amount = amount
-        self.transaction_type = transaction_type
-
-    def __str__(self):
-        return f"{self.date} - {self.transaction_type} - ${self.amount}"
-
-
 class BankAccount:
     def __init__(self, bankData="bank.csv"):
         self.bankData= bankData
@@ -99,12 +89,21 @@ class BankAccount:
     def display_details(self, account_id):
         account_info = self.accounts[account_id]
         full_name = f"{account_info['frst_name']} {account_info['last_name']}"
-        print(f"Account ID: {account_id}, Account Holder: {full_name}, \nBalance_checking: {account_info['balance_checking']}. , Balance_savings: {account_info['balance_savings']}")
+        print(f"Account ID: {account_id}, Account Holder: {full_name}, \nBalance_checking: ${account_info['balance_checking']}. , Balance_savings: ${account_info['balance_savings']}")
     
     def print_transaction_history(self):
         print("Transaction History: ")
         for transaction in self.transactions:
             print(transaction)
+
+class Transaction (BankAccount):
+    def __init__(self,amount, transaction_type):
+        self.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.amount = amount
+        self.transaction_type = transaction_type
+
+    def __str__(self):
+        return f"{self.date} - {self.transaction_type} - ${self.amount}"
 
 
 class SavingsAccount(BankAccount):
@@ -205,14 +204,14 @@ class MainBankPage (BankAccount):
             elif choice == "2":
                 account_type = input("Which account to withdraw from?(checking/savings): ")
                 amount = float(input("Enter withdraw amount: "))
-                self.deposit(account_id, account_type, amount)
+                self.withdraw(account_id, account_type, amount)
                 
             elif choice == "3":
                 pass
             elif choice == "4":
-                pass
+                self.display_details(account_id)
             elif choice == "5":
-                pass
+                self.print_transaction_history()
             elif choice == "6":
                 print("Thank you for banking with us!")
                 break
