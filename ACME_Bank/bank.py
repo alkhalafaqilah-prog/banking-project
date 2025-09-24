@@ -6,17 +6,32 @@ import datetime
 class MainBankPage:
     # Function displaying main page welcome message
     def welcomeMessage():
-        print()
-        print("-" * 50)
-        print("                Welcome to ACME Bank               ")
-        print("-" * 50)
-        print("  Please choose one of the following options:")
-        print("    1.Login to existing account.")
-        print("    2.Create new checking account.")
-        print("    3.Create new saving account.")
-        print("    4.Exit.")
-        print()
-    welcomeMessage()
+        while True:
+            print()
+            print("-" * 50)
+            print("                Welcome to ACME Bank               ")
+            print("-" * 50)
+            print("  Please choose one of the following options:")
+            print("    1.Login to existing account.")
+            print("    2.Create new checking account.")
+            print("    3.Create new saving account.")
+            print("    4.Exit.")
+            print()
+            
+            choice = input("Enter your choice: ")
+            
+            if choice == "1":
+                pass
+            elif choice == "2":
+                pass
+            elif choice == "3":
+                pass
+            elif choice == "4":
+                print("Thank you for banking with us!")
+                break
+            else:
+                print("Invalid input. Please try again.")
+            
 
 # Source Michael - Coding Instructor YT
 class Transaction:
