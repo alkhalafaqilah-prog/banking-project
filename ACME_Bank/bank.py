@@ -2,71 +2,7 @@ import csv
 import random
 import datetime
 
-# Main page for ACME bank system
-class MainBankPage:
-    # Function displaying main page welcome message
-    def welcomeMessage():
-        while True:
-            print()
-            print("-" * 50)
-            print("                Welcome to ACME Bank               ")
-            print("-" * 50)
-            print("  Please choose one of the following options:")
-            print("    1. Login to existing account.")
-            print("    2. Create new checking account.")
-            print("    3. Create new saving account.")
-            print("    4. Exit.")
-            print()
-            
-            choice = input("Enter your choice: ")
-            
-            if choice == "1":
-                pass
-            elif choice == "2":
-                pass
-            elif choice == "3":
-                pass
-            elif choice == "4":
-                print("Thank you for banking with us!")
-                break
-            else:
-                print("Invalid input. Please try again.")
-    
-    def accountOperations():
-        while True:
-            print()
-            print("-" * 50)
-            print("                Account Operations               ")
-            print("-" * 50)
-            print("  Please choose one of the following options:")
-            print("    1. Deposit.")
-            print("    2. Withdraw.")
-            print("    3. Transfer.")
-            print("    4. Check Balance.")
-            print("    5. View transaction history.")
-            print("    6. Exit.")
-            print()
-            
-            choice = input("Enter your choice: ")
-            
-            if choice == "1":
-                pass
-            elif choice == "2":
-                pass
-            elif choice == "3":
-                pass
-            elif choice == "4":
-                pass
-            elif choice == "5":
-                pass
-            elif choice == "6":
-                print("Thank you for banking with us!")
-                break
-            else:
-                print("Invalid input. Please try again.")
-            
-
-# Source Michael - Coding Instructor YT
+# Source Michael - Coding Instructor YT & codeBricks
 class Transaction:
     def __init__(self,amount, transaction_type):
         self.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -130,16 +66,13 @@ class BankAccount:
         return account_id
     
     def login(self, account_id, password):
-        account_id = input("Enter your account ID: ")
-        password = input("Enter your account password: ")
-        
         if account_id not in self.accounts:
             print("Entered account does not exist!")
         if not self.accounts[account_id]['is_active']:
             print("Your account is deactivated.")
         if self.accounts[account_id]['password'] != password:
             print("Incorrect password.")
-        print("Login Confirmed!")
+        print("\n   <<<     Login Confirmed!     >>>")
         return self.accounts[account_id]
     
     def deposit(self, account_id, account_type, amount):
@@ -157,6 +90,9 @@ class BankAccount:
             self.transactions.append(Transaction(amount, "Withdrawal"))
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
+
+    def transfer(self):
+        pass
 
     def display_details(self, account_id):
         account_info = self.accounts[account_id]
@@ -193,10 +129,77 @@ class CheckingAccount(BankAccount):
             print ("Checkbook issued")
         else:
             print("Checkbook already issued.")
+
+# Main page for ACME bank system
+class MainBankPage (BankAccount):
+    def __init__(self):
+        super().__init__()
+    # Function displaying main page welcome message
+    def welcomeMessage(self):
+        while True:
+            print()
+            print("-" * 50)
+            print("                Welcome to ACME Bank               ")
+            print("-" * 50)
+            print("  Please choose one of the following options:")
+            print("    1. Login to existing account.")
+            print("    2. Create new checking account.")
+            print("    3. Create new saving account.")
+            print("    4. Exit.")
+            print()
+            
+            choice = input("Enter your choice: ")
+            
+            if choice == "1":
+                account_id = input("Enter your account ID: ")
+                password = input("Enter your account password: ")
+                self.login(account_id,password)
+                self.accountOperations(account_id)
+            elif choice == "2":
+                pass
+            elif choice == "3":
+                pass
+            elif choice == "4":
+                print("Thank you for banking with us!")
+                break
+            else:
+                print("Invalid input. Please try again.")
+    
+    def accountOperations(self, account_id):
+        while True:
+            print()
+            print("-" * 50)
+            print("                Account Operations               ")
+            print("-" * 50)
+            print("  Please choose one of the following options:")
+            print("    1. Deposit.")
+            print("    2. Withdraw.")
+            print("    3. Transfer.")
+            print("    4. Check Balance.")
+            print("    5. View transaction history.")
+            print("    6. Exit.")
+            print()
+            
+            choice = input("Enter your choice: ")
+            
+            if choice == "1":
+                pass
+            elif choice == "2":
+                pass
+            elif choice == "3":
+                pass
+            elif choice == "4":
+                pass
+            elif choice == "5":
+                pass
+            elif choice == "6":
+                print("Thank you for banking with us!")
+                break
+            else:
+                print("Invalid input. Please try again.")
             
 
 if __name__ == "__main__":
-    bank = BankAccount()
-    MainBankPage.welcomeMessage()
-    MainBankPage.accountOperations()
+    bank = MainBankPage()
+    bank.welcomeMessage()
 
