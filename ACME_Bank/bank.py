@@ -65,6 +65,25 @@ class BankAccount:
         print("\n   <<<     Login Confirmed!     >>>")
         return self.accounts[account_id]
     
+    def overdraft_protection(self, account_id, amount):
+        account = self.accounts[account_id]
+        current_balance = account['balance_checking']
+        new_balance = current_balance - amount
+        
+        if new_balance < 0:
+            if new_balance <-100:
+                print("Withdrawal would result in a balance less than -$100.")
+            if amount > 100:
+                print("Cannot withdraw more than $100 while in overdraft.")
+                
+            account['overdraft_count'] += 1
+            account['balance_checking'] -= 35.0 
+            
+            if account['overdraft_count'] >= 2:
+                account['is_active'] = False
+                self.save_accounts()
+                print(f"Your account {account_id} is deactivated due to multiple overdrafts.")
+            
     def deposit(self, account_id, account_type, amount):
         if amount >0:
             self.accounts[account_id][f'balance_{account_type}'] += amount
@@ -75,6 +94,12 @@ class BankAccount:
             print("Deposit amount must be positive.")
     
     def withdraw(self, account_id, account_type, amount):
+        account = self.accounts.get(account_id)
+        current_balance = account['balance_checking']
+        
+        if current_balance < amount:
+            self.overdraft_protection(account_id, amount)
+            
         if 0 <= amount <= self.accounts[account_id][f'balance_{account_type}']:
             self.accounts[account_id][f'balance_{account_type}'] -= amount
             print(f"Withdrew {amount} SAR\nNew balance: {self.accounts[account_id][f'balance_{account_type}']} SAR")
@@ -115,31 +140,6 @@ class Transaction (BankAccount):
 
     def __str__(self):
         return f"{self.date} - {self.transaction_type} - {self.amount} SAR"
-
-
-class SavingsAccount(BankAccount):
-    def __init__(self, account_id, minimum_balance):
-        super().__init__(account_id)
-        self.minimum_balance = minimum_balance
-    
-    def withdraw(self, account_id, amount):
-        if self.accounts[account_id]['balance_savings'] - amount < self.minimum_balance:
-            print ("Cannot withdraw, minimum balance requirement not met.")
-        else:
-            super().withdraw(amount)
-        
-
-class CheckingAccount(BankAccount):
-    def __init__(self, account_id):
-        super().__init__(account_id)
-        self.checkbook_issued = False
-
-    def issue_checkbook(self):
-        if not self.checkbook_issued:
-            self.checkbook_issued = True
-            print ("Checkbook issued")
-        else:
-            print("Checkbook already issued.")
 
 # Main page for ACME bank system
 class MainBankPage (BankAccount):
