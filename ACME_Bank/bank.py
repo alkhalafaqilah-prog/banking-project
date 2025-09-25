@@ -11,24 +11,19 @@ class BankAccount:
         
     def get_accounts(self):
         accounts = {}
-        try:
-            with open(self.bankData, 'r', newline='') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    accounts[row['account_id']] = {
-                        'frst_name': row['frst_name'],
-                        'last_name': row['last_name'],
-                        'password': row['password'],
-                        'balance_checking': float(row['balance_checking']),
-                        'balance_savings': float(row['balance_savings']),
-                        'minimum_savings': float(row.get('minimum_savings', 0.0)),
-                        'overdraft_count': int(row.get('overdraft_count', 0)),
-                        'is_active': row.get('is_active', 'True').lower() == 'true'
-                        }
-        except FileNotFoundError:
-            print("bank.csv file is not found, a new file will be created.")
-        except (ValueError, KeyError) as e:
-            print(f"Unexpected token for key or value: {e}")
+        with open(self.bankData, 'r', newline='') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                accounts[row['account_id']] = {
+                    'frst_name': row['frst_name'],
+                    'last_name': row['last_name'],
+                    'password': row['password'],
+                    'balance_checking': float(row['balance_checking']),
+                    'balance_savings': float(row['balance_savings']),
+                    'minimum_savings': float(row.get('minimum_savings', 0.0)),
+                    'overdraft_count': int(row.get('overdraft_count', 0)),
+                    'is_active': row.get('is_active', 'True').lower() == 'true'
+                    }
             return accounts
     
     def upload_accounts(self):
@@ -65,6 +60,7 @@ class BankAccount:
     def login(self, account_id, password):
         if account_id not in self.accounts:
             print("Entered account does not exist!")
+            return None
         if not self.accounts[account_id]['is_active']:
             print("Your account is deactivated.")
         if self.accounts[account_id]['password'] != password:
@@ -173,15 +169,14 @@ class MainBankPage (BankAccount):
             print("    3. Create new saving account.")
             print("    4. Exit.")
             print()
-            
             choice = input("Enter your choice: ")
-            
+                
             if choice == "1":
                 account_id = input("Enter your account ID: ")
                 password = input("Enter your account password: ")
                 self.login(account_id,password)
                 self.accountOperations(account_id)
-                
+                    
             elif choice == "2":
                 print("\n    <<<    New Customer Registration    >>>")
                 first_name = input("Enter your first name: ")
@@ -189,7 +184,7 @@ class MainBankPage (BankAccount):
                 password = input("Create a password: ")
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
                 print(f"\nSuccessfully created a new checking account! Your Account ID is: {account_id}")
-                
+                    
             elif choice == "3":
                 print("\n    <<<    New Customer Registration    >>>")
                 first_name = input("Enter your first name: ")
@@ -198,14 +193,14 @@ class MainBankPage (BankAccount):
                 minimum_savings = float(input("Enter the minimum balance:"))
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0, minimum_savings=minimum_savings)
                 print(f"\nSuccessfully created a new savings account! Your Account ID is: {account_id}")
-                
+                    
             elif choice == "4":
                 print("Thank you for banking with us!")
                 break
-            
+                            
             else:
                 print("Invalid input. Please try again.")
-    
+        
     def accountOperations(self, account_id):
         while True:
             print()
@@ -223,17 +218,16 @@ class MainBankPage (BankAccount):
             print()
             
             choice = input("Enter your choice: ")
-            
+                
             if choice == "1":
                 account_type = input("Which account to deposit to?(checking/savings): ")
                 amount = float(input("Enter deposit amount: "))
                 self.deposit(account_id, account_type, amount)
-                
             elif choice == "2":
                 account_type = input("Which account to withdraw from?(checking/savings): ")
                 amount = float(input("Enter withdraw amount: "))
                 self.withdraw(account_id, account_type, amount)
-                
+                    
             elif choice == "3":
                 from_account_type = input("Which account would you transfer from?(checking,savings): ")
                 to_id = input("Enter the user ID or your personal ID to transfer to: ")
@@ -241,26 +235,25 @@ class MainBankPage (BankAccount):
                 amount = float(input("Enter the amount to transfer: "))
                 self.transfer(account_id, to_id, from_account_type, to_account_type, amount)
                 print (f"{amount} SAR transferred successfully!")
-                
+                    
             elif choice == "4":
                 new_minimum = float(input("Enter new minimum balance: "))
                 self.accounts[account_id]['minimum_savings'] = new_minimum
                 self.upload_accounts()
                 print("New minium balance is updated")
-                
+                    
             elif choice == "5":
                 self.display_details(account_id)
-                
+                    
             elif choice == "6":
                 self.print_transaction_history()
-                
+                    
             elif choice == "7":
                 print("Thank you for banking with us!")
                 break
-            
+                
             else:
                 print("Invalid input. Please try again.")
-            
 
 if __name__ == "__main__":
     bank = MainBankPage()
