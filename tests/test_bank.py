@@ -26,3 +26,18 @@ class TestBank (unittest.TestCase):
             file.write(self.mock_csv_bank)
         
         self.bank = BankAccount(bankData=self.test_csv_bank)
+        
+    # def tearDown(self):
+    #     if os.path.exists(self.test_csv_bank):
+    #         os.remove(self.test_csv_bank)
+    
+    def test_bank_accounts(self):
+        self.assertIsInstance(self.bank,BankAccount)
+        self.assertEqual(len(self.bank.accounts),8)
+        self.assertIn('10003',self.bank.accounts)
+        self.assertIn('61879',self.bank.accounts)
+        self.assertIn('79129',self.bank.accounts)
+    
+    def test_main_bank_page(self):
+        main_page = MainBankPage()
+        self.assertIsInstance(main_page,MainBankPage)
