@@ -44,11 +44,14 @@ class TestBank (unittest.TestCase):
     
     def test_login_confirmation(self):
         account = self.bank.login('10001','juagw362')
+        
         #Test if login is successful
         self.assertIsNotNone(account)
         self.assertEqual(account['frst_name'], 'suresh')
+        
         #Test incorrect password
         self.assertIsNotNone (self.bank.login('10001','apdcvb'))
+        
         #Test not exited account id
         self.assertIsNone (self.bank.login('10007','apdcvb'))
     
@@ -70,11 +73,41 @@ class TestBank (unittest.TestCase):
         current_balance = self.bank.accounts['10002']['balance_checking']
         self.bank.withdraw('10002', 'checking', 50)
         self.assertEqual(self.bank.accounts['10002']['balance_checking'], current_balance - 50)
+        
         #Test of insufficient amount withdraw
         initial_balance = self.bank.accounts['64481']['balance_checking']
         self.bank.withdraw('64481', 'checking', 900)
         self.assertEqual(self.bank.accounts['64481']['balance_checking'], initial_balance)
+        
         #Test withdrawing an amount more than minimum balance in savings
         minimum_balance = self.bank.accounts['79129']['balance_savings']
         self.bank.withdraw('79129', 'savings', 650)
         self.assertEqual(self.bank.accounts['79129']['balance_savings'], minimum_balance)
+
+    def test_overdraft_protection(self):
+        self.bank.accounts['10005']['balance_checking'] = -20
+        self.bank.accounts['10005']['overdraft_count'] = 1
+        self.bank.withdraw('10005', 'checking', 50)
+        self.assertEqual(self.bank.accounts['10005']['balance_checking'], -20 - 35)
+        self.assertFalse(self.bank.accounts['10005']['is_active'])
+    
+    def test_transfer_success(self):
+        #Test successful transfer
+        sent_initial_balance = self.bank.accounts['10001']['balance_checking']
+        received_initial_balance = self.bank.accounts['10002']['balance_checking']
+        
+        self.bank.transfer('10001', '10002', 'checking', 'checking', 100)
+        
+        self.assertEqual(self.bank.accounts['10001']['balance_checking'], sent_initial_balance - 100)
+        self.assertEqual(self.bank.accounts['10002']['balance_checking'], received_initial_balance + 100)
+        #Test transferring insufficient amount
+        sent_balance = self.bank.accounts['10001']['balance_checking']
+        received_balance = self.bank.accounts['10002']['balance_checking']
+        
+        self.bank.transfer('10001', '10002', 'checking', 'checking', 20000)
+        
+        self.assertEqual(self.bank.accounts['10001']['balance_checking'], sent_balance)
+        self.assertNotEqual(self.bank.accounts['10002']['balance_checking'], received_balance)
+    
+    if __name__ == '__main__':
+            unittest.main()
