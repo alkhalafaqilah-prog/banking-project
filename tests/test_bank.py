@@ -58,3 +58,23 @@ class TestBank (unittest.TestCase):
         self.assertEqual(self.bank.accounts[new_cust]['frst_name'], "Norah")
         self.assertEqual(self.bank.accounts[new_cust]['balance_checking'], 0.0)
         self.assertEqual(self.bank.accounts[new_cust]['balance_savings'], 0.0)
+    
+    def test_deposit(self):
+        current_balance = self.bank.accounts['10003']['balance_checking']
+        self.bank.deposit('10003','checking',100)
+        self.assertEqual(self.bank.accounts['10003']['balance_checking'], current_balance + 100)
+        self.assertEqual(len(self.bank.transactions), 1)
+    
+    def test_withdraw(self):
+        #Test successful withdraw
+        current_balance = self.bank.accounts['10002']['balance_checking']
+        self.bank.withdraw('10002', 'checking', 50)
+        self.assertEqual(self.bank.accounts['10002']['balance_checking'], current_balance - 50)
+        #Test of insufficient amount withdraw
+        initial_balance = self.bank.accounts['64481']['balance_checking']
+        self.bank.withdraw('64481', 'checking', 900)
+        self.assertEqual(self.bank.accounts['64481']['balance_checking'], initial_balance)
+        #Test withdrawing an amount more than minimum balance in savings
+        minimum_balance = self.bank.accounts['79129']['balance_savings']
+        self.bank.withdraw('79129', 'savings', 650)
+        self.assertEqual(self.bank.accounts['79129']['balance_savings'], minimum_balance)
