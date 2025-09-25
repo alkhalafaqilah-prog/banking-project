@@ -68,7 +68,7 @@ class BankAccount:
     def deposit(self, account_id, account_type, amount):
         if amount >0:
             self.accounts[account_id][f'balance_{account_type}'] += amount
-            print(f"Deposited ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
+            print(f"Deposited {amount} SAR\nNew balance: {self.accounts[account_id][f'balance_{account_type}']} SAR")
             self.transactions.append(Transaction(amount, "Deposit"))
             self.upload_accounts()
         else:
@@ -77,19 +77,30 @@ class BankAccount:
     def withdraw(self, account_id, account_type, amount):
         if 0 <= amount <= self.accounts[account_id][f'balance_{account_type}']:
             self.accounts[account_id][f'balance_{account_type}'] -= amount
-            print(f"Withdrew ${amount}\nNew balance: ${self.accounts[account_id][f'balance_{account_type}']}")
+            print(f"Withdrew {amount} SAR\nNew balance: {self.accounts[account_id][f'balance_{account_type}']} SAR")
             self.transactions.append(Transaction(amount, "Withdrawal"))
             self.upload_accounts()
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
 
-    def transfer(self):
-        pass
+    def transfer(self, from_id, to_id, from_account_type,to_account_type, amount):
+        if amount <= 0:
+            print("Please enter a positive amount.")
+        if from_id not in self.accounts or not self.accounts[from_id]['is_active']:
+            print("Your account dose not exist or is not active!")
+        if to_id not in self.accounts or not self.accounts[to_id]['is_active']:
+            print("The account you trying to transfer money dose not exist or is not active!")
+        
+        self.withdraw(from_id, from_account_type, amount)
+        self.deposit(to_id, to_account_type, amount)
+        
+        self.transactions.append(Transaction(amount, "Transfer"))
+        self.upload_accounts()
 
     def display_details(self, account_id):
         account_info = self.accounts[account_id]
         full_name = f"{account_info['frst_name']} {account_info['last_name']}"
-        print(f"Account ID: {account_id}, Account Holder: {full_name}, \nBalance_checking: ${account_info['balance_checking']}. , Balance_savings: ${account_info['balance_savings']}")
+        print(f"Account ID: {account_id}, Account Holder: {full_name}, \nBalance_checking: {account_info['balance_checking']} SAR , Balance_savings: {account_info['balance_savings']} SAR.")
     
     def print_transaction_history(self):
         print("Transaction History: ")
@@ -103,25 +114,24 @@ class Transaction (BankAccount):
         self.transaction_type = transaction_type
 
     def __str__(self):
-        return f"{self.date} - {self.transaction_type} - ${self.amount}"
+        return f"{self.date} - {self.transaction_type} - {self.amount} SAR"
 
 
 class SavingsAccount(BankAccount):
-    def __init__(self, account_holder, minimum_balance):
-        super().__init__(account_holder)
-        self.minimum_balance  = minimum_balance
+    def __init__(self, account_id, minimum_balance):
+        super().__init__(account_id)
+        self.minimum_balance = minimum_balance
     
-    def withdraw(self,amount):
-        if self.balance - amount < self.minimum_balance:
+    def withdraw(self, account_id, amount):
+        if self.accounts[account_id]['balance_savings'] - amount < self.minimum_balance:
             print ("Cannot withdraw, minimum balance requirement not met.")
         else:
             super().withdraw(amount)
         
 
-
 class CheckingAccount(BankAccount):
-    def __init__(self, account_holder):
-        super().__init__(account_holder)
+    def __init__(self, account_id):
+        super().__init__(account_id)
         self.checkbook_issued = False
 
     def issue_checkbook(self):
@@ -207,7 +217,13 @@ class MainBankPage (BankAccount):
                 self.withdraw(account_id, account_type, amount)
                 
             elif choice == "3":
-                pass
+                from_account_type = input("Which account would you transfer from?(checking,savings): ")
+                to_id = input("Enter the user ID or your personal ID to transfer to: ")
+                to_account_type = input("Transfer to Account Type(checking/savings): ")
+                amount = float(input("Enter the amount to transfer: "))
+                self.transfer(account_id, to_id, from_account_type, to_account_type, amount)
+                print (f"{amount} SAR transferred successfully!")
+                
             elif choice == "4":
                 self.display_details(account_id)
             elif choice == "5":
