@@ -41,3 +41,20 @@ class TestBank (unittest.TestCase):
     def test_main_bank_page(self):
         main_page = MainBankPage()
         self.assertIsInstance(main_page,MainBankPage)
+    
+    def test_login_confirmation(self):
+        account = self.bank.login('10001','juagw362')
+        #Test if login is successful
+        self.assertIsNotNone(account)
+        self.assertEqual(account['frst_name'], 'suresh')
+        #Test incorrect password
+        self.assertIsNotNone (self.bank.login('10001','apdcvb'))
+        #Test not exited account id
+        self.assertIsNone (self.bank.login('10007','apdcvb'))
+    
+    def test_add_new_customer(self):
+        new_cust = self.bank.add_new_customer("Norah","Khaled","PASSWORD")
+        self.assertIn(new_cust, self.bank.accounts)
+        self.assertEqual(self.bank.accounts[new_cust]['frst_name'], "Norah")
+        self.assertEqual(self.bank.accounts[new_cust]['balance_checking'], 0.0)
+        self.assertEqual(self.bank.accounts[new_cust]['balance_savings'], 0.0)
