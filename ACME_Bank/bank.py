@@ -20,13 +20,14 @@ class BankAccount:
                     'password': row['password'],
                     'balance_checking': float(row['balance_checking']),
                     'balance_savings': float(row['balance_savings']),
+                    'minimum_savings': float(row.get('minimum_savings', 0.0)),
                     'overdraft_count': int(row.get('overdraft_count', 0)),
                     'is_active': row.get('is_active', 'True').lower() == 'true'
                     }
         return accounts
     
     def upload_accounts(self):
-        fieldnames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'overdraft_count', 'is_active']
+        fieldnames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'minimum_savings', 'overdraft_count', 'is_active']
         with open(self.bankData, 'w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames = fieldnames )
             writer.writeheader()
@@ -41,7 +42,7 @@ class BankAccount:
             if new_account_id not in self.accounts:
                 return new_account_id
     
-    def add_new_customer(self, frst_name, last_name, password, checking_balance =0.0, savings_balance =0.0):
+    def add_new_customer(self, frst_name, last_name, password, checking_balance =0.0, savings_balance =0.0,minimum_savings=0.0):
         account_id = self.generate_account_id()
         self.accounts[account_id] = {
             'frst_name': frst_name,
@@ -49,6 +50,7 @@ class BankAccount:
             'password' : password,
             'balance_checking' : checking_balance,
             'balance_savings': savings_balance,
+            'minimum_savings': minimum_savings,
             'overdraft_count': 0,
             'is_active': True
         }
@@ -68,10 +70,9 @@ class BankAccount:
     def overdraft_protection(self, account_id, amount):
         account = self.accounts[account_id]
         current_balance = account['balance_checking']
-        new_balance = current_balance - amount
         
-        if new_balance < 0:
-            if new_balance <-100:
+        if current_balance < 0:
+            if current_balance <-100:
                 print("Withdrawal would result in a balance less than -$100.")
             if amount > 100:
                 print("Cannot withdraw more than $100 while in overdraft.")
@@ -81,7 +82,7 @@ class BankAccount:
             
             if account['overdraft_count'] >= 2:
                 account['is_active'] = False
-                self.save_accounts()
+                self.upload_accounts()
                 print(f"Your account {account_id} is deactivated due to multiple overdrafts.")
             
     def deposit(self, account_id, account_type, amount):
@@ -95,18 +96,26 @@ class BankAccount:
     
     def withdraw(self, account_id, account_type, amount):
         account = self.accounts.get(account_id)
-        current_balance = account['balance_checking']
         
-        if current_balance < amount:
-            self.overdraft_protection(account_id, amount)
+        current_balance = account[f'balance_{account_type}']
+        
+        if account_type == 'savings':
+            if current_balance - amount < account['minimum_savings']:
+                print("Cannot withdraw. Minimum balance requirement not met.")
+                return
             
-        if 0 <= amount <= self.accounts[account_id][f'balance_{account_type}']:
+        if account_type == 'checking' and current_balance < amount:
+            self.overdraft_protection(account_id, amount)
+            current_balance = account[f'balance_{account_type}']
+            
+        if  amount <= current_balance:
             self.accounts[account_id][f'balance_{account_type}'] -= amount
             print(f"Withdrew {amount} SAR\nNew balance: {self.accounts[account_id][f'balance_{account_type}']} SAR")
             self.transactions.append(Transaction(amount, "Withdrawal"))
             self.upload_accounts()
         else:
             print ("Insufficient balance or invalid withdrawal amount.")
+            
 
     def transfer(self, from_id, to_id, from_account_type,to_account_type, amount):
         if amount <= 0:
@@ -180,7 +189,8 @@ class MainBankPage (BankAccount):
                 first_name = input("Enter your first name: ")
                 last_name = input("Enter your last name: ")
                 password = input("Create a password: ")
-                account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
+                minimum_savings = float(input("Enter the minimum balance:"))
+                account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0, minimum_savings=minimum_savings)
                 print(f"\nSuccessfully created a new savings account! Your Account ID is: {account_id}")
                 
             elif choice == "4":
@@ -199,9 +209,10 @@ class MainBankPage (BankAccount):
             print("    1. Deposit.")
             print("    2. Withdraw.")
             print("    3. Transfer.")
-            print("    4. Check Balance.")
-            print("    5. View transaction history.")
-            print("    6. Exit.")
+            print("    4. Change savings account minimum balance.")
+            print("    5. Check Balance.")
+            print("    6. View transaction history.")
+            print("    7. Exit.")
             print()
             
             choice = input("Enter your choice: ")
@@ -225,10 +236,17 @@ class MainBankPage (BankAccount):
                 print (f"{amount} SAR transferred successfully!")
                 
             elif choice == "4":
-                self.display_details(account_id)
+                new_minimum = float(input("Enter new minimum balance: "))
+                self.accounts[account_id]['minimum_savings'] = new_minimum
+                self.upload_accounts()
+                print("New minium balance is updated")
+                
             elif choice == "5":
-                self.print_transaction_history()
+                self.display_details(account_id)
+                
             elif choice == "6":
+                self.print_transaction_history()
+            elif choice == "7":
                 print("Thank you for banking with us!")
                 break
             else:
