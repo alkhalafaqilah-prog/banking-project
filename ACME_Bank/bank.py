@@ -11,20 +11,25 @@ class BankAccount:
         
     def get_accounts(self):
         accounts = {}
-        with open(self.bankData, 'r', newline='') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                accounts[row['account_id']] = {
-                    'frst_name': row['frst_name'],
-                    'last_name': row['last_name'],
-                    'password': row['password'],
-                    'balance_checking': float(row['balance_checking']),
-                    'balance_savings': float(row['balance_savings']),
-                    'minimum_savings': float(row.get('minimum_savings', 0.0)),
-                    'overdraft_count': int(row.get('overdraft_count', 0)),
-                    'is_active': row.get('is_active', 'True').lower() == 'true'
-                    }
-        return accounts
+        try:
+            with open(self.bankData, 'r', newline='') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    accounts[row['account_id']] = {
+                        'frst_name': row['frst_name'],
+                        'last_name': row['last_name'],
+                        'password': row['password'],
+                        'balance_checking': float(row['balance_checking']),
+                        'balance_savings': float(row['balance_savings']),
+                        'minimum_savings': float(row.get('minimum_savings', 0.0)),
+                        'overdraft_count': int(row.get('overdraft_count', 0)),
+                        'is_active': row.get('is_active', 'True').lower() == 'true'
+                        }
+        except FileNotFoundError:
+            print("bank.csv file is not found, a new file will be created.")
+        except (ValueError, KeyError) as e:
+            print(f"Unexpected token for key or value: {e}")
+            return accounts
     
     def upload_accounts(self):
         fieldnames = ['account_id', 'frst_name', 'last_name', 'password', 'balance_checking', 'balance_savings', 'minimum_savings', 'overdraft_count', 'is_active']
@@ -72,8 +77,9 @@ class BankAccount:
         current_balance = account['balance_checking']
         
         if current_balance < 0:
-            if current_balance <-100:
+            if current_balance <= -100:
                 print("Withdrawal would result in a balance less than -$100.")
+            
             if amount > 100:
                 print("Cannot withdraw more than $100 while in overdraft.")
                 
@@ -196,6 +202,7 @@ class MainBankPage (BankAccount):
             elif choice == "4":
                 print("Thank you for banking with us!")
                 break
+            
             else:
                 print("Invalid input. Please try again.")
     
@@ -246,9 +253,11 @@ class MainBankPage (BankAccount):
                 
             elif choice == "6":
                 self.print_transaction_history()
+                
             elif choice == "7":
                 print("Thank you for banking with us!")
                 break
+            
             else:
                 print("Invalid input. Please try again.")
             
