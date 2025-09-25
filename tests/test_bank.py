@@ -26,7 +26,7 @@ class TestBank (unittest.TestCase):
             file.write(self.mock_csv_bank)
         
         self.bank = BankAccount(bankData=self.test_csv_bank)
-        
+    
     # def tearDown(self):
     #     if os.path.exists(self.test_csv_bank):
     #         os.remove(self.test_csv_bank)
@@ -91,7 +91,7 @@ class TestBank (unittest.TestCase):
         self.assertEqual(self.bank.accounts['10005']['balance_checking'], -20 - 35)
         self.assertFalse(self.bank.accounts['10005']['is_active'])
     
-    def test_transfer_success(self):
+    def test_transfer(self):
         #Test successful transfer
         sent_initial_balance = self.bank.accounts['10001']['balance_checking']
         received_initial_balance = self.bank.accounts['10002']['balance_checking']
@@ -100,6 +100,7 @@ class TestBank (unittest.TestCase):
         
         self.assertEqual(self.bank.accounts['10001']['balance_checking'], sent_initial_balance - 100)
         self.assertEqual(self.bank.accounts['10002']['balance_checking'], received_initial_balance + 100)
+        
         #Test transferring insufficient amount
         sent_balance = self.bank.accounts['10001']['balance_checking']
         received_balance = self.bank.accounts['10002']['balance_checking']
@@ -108,6 +109,12 @@ class TestBank (unittest.TestCase):
         
         self.assertEqual(self.bank.accounts['10001']['balance_checking'], sent_balance)
         self.assertNotEqual(self.bank.accounts['10002']['balance_checking'], received_balance)
+    
+    def test_transaction(self):
+        transaction = Transaction(50, "Test")
+        self.assertEqual(transaction.amount, 50)
+        self.assertEqual(transaction.transaction_type, "Test")
+        self.assertIsInstance(transaction.date, str)
     
     if __name__ == '__main__':
             unittest.main()
