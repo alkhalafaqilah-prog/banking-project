@@ -7,3 +7,5 @@ account_id,frst_name,last_name,password,balance_checking,balance_savings,minimum
 64481,Aqilah,Alkhalaf,pppp,780.0,250.0,0.0,0,True
 61879,Osama,Ahmed,oooo,-5.0,0.0,0.0,3,False
 79129,Mohammed,Rada,Okiuy,0.0,700.0,100.0,0,True
+77995,Mohammed,Nasser,12345,0.0,0.0,0.0,0,True
+47562,Reem,Faisal,G201342,0.0,0.0,0.0,0,True

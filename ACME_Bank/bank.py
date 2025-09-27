@@ -1,6 +1,8 @@
 import csv
 import random
 import datetime
+import stdiomask
+from getpass import getpass
 
 # Source Michael - Coding Instructor YT & codeBricks
 class BankAccount:
@@ -173,7 +175,7 @@ class MainBankPage (BankAccount):
                 
             if choice == "1":
                 account_id = input("Enter your account ID: ")
-                password = input("Enter your account password: ")
+                password = stdiomask.getpass("Enter your account password: ", '*')
                 self.login(account_id,password)
                 self.accountOperations(account_id)
                     
@@ -181,7 +183,7 @@ class MainBankPage (BankAccount):
                 print("\n    <<<    New Customer Registration    >>>")
                 first_name = input("Enter your first name: ")
                 last_name = input("Enter your last name: ")
-                password = input("Create a password: ")
+                password = stdiomask.getpass("Create a password: ", '*')
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0)
                 print(f"\nSuccessfully created a new checking account! Your Account ID is: {account_id}")
                     
@@ -189,7 +191,7 @@ class MainBankPage (BankAccount):
                 print("\n    <<<    New Customer Registration    >>>")
                 first_name = input("Enter your first name: ")
                 last_name = input("Enter your last name: ")
-                password = input("Create a password: ")
+                password = stdiomask.getpass("Create a password: ", '*')
                 minimum_savings = float(input("Enter the minimum balance:"))
                 account_id = self.add_new_customer(first_name, last_name, password, checking_balance=0.0, savings_balance=0.0, minimum_savings=minimum_savings)
                 print(f"\nSuccessfully created a new savings account! Your Account ID is: {account_id}")
