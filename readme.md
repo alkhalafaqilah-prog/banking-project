@@ -29,6 +29,7 @@ A simple, file-based banking system application built in Python to simulate core
     ```
 
 2.  **Run the application:**
+    
     In your terminal run the code using:
 
     ```
