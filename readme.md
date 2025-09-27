@@ -18,6 +18,10 @@ A simple, file-based banking system application built in Python to simulate core
 ### Dependencies
 
 * You need Python 3.9 and above installed on your system.
+* You need stdiomask module installed, if you don't have it use the following command:
+    ```
+    pip install stdiomask
+    ```
 
 ### Installing & Executing program
 
@@ -49,7 +53,7 @@ A simple, file-based banking system application built in Python to simulate core
 
 ## 👨‍💻 Author
 
-Aqilah Alkhalaf (https://github.com/alkhalafaqilah-prog)
+Aqilah Alkhalaf: https://github.com/alkhalafaqilah-prog
 
 
 ## Acknowledgments
